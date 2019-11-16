@@ -18,7 +18,7 @@ class CalibrationClass:
             f_read = open(self.calib_dir+img_idx.split('_')[0]+".txt", "r")
 
             # TODO: change to the line number of P_rect2 or P2
-            last_line = f_read.readlines()[25]
+            last_line = f_read.readlines()[2]
             f_read.close()
             
             P_str = last_line.split(" ")[1:]

@@ -35,7 +35,7 @@ class d2zClass:
             dpt = disp_to_depth.to('cpu').detach().numpy()
             k = np.max(np.abs(dpt))
             dpt = dpt / k
-            dpt = cv2.resize(dpt, (original_shape[0], original_shape[1]))
+            dpt = cv2.resize(dpt, (original_shape[1], original_shape[0]))
             dpt = dpt * k
             dpt_list.append(dpt)
         return dpt_list

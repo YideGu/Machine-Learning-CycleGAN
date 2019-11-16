@@ -72,7 +72,7 @@ class_names = ['BG', 'person', 'bicycle', 'car', 'motorcycle', 'airplane',
 
 # Load a random image from the images folder
 # file_names = next(os.walk(IMAGE_DIR))[2]
-image = skimage.io.imread("../images/data/left_img/000056_10.png")
+image = skimage.io.imread("../images/data/left_img/WeChat Image_20191116134928.jpg")
 
 # Run detection
 results = model.detect([image], verbose=1)

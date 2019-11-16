@@ -1,5 +1,6 @@
 import numpy as np
 import cv2
+import math
 from matplotlib import pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import patches,  lines
@@ -194,6 +195,23 @@ def boundingbox(pcd_3D, z_offset = 0):
     x1, x2 = xyz_min[0],xyz_max[0]
     y1, y2 = xyz_min[1],xyz_max[1]
     z1, z2 = xyz_min[2],xyz_max[2] + z_offset
+    #print(x1,x2,y1,y2,z1,z2)
+    vertice3D = np.array([[x1, x1, x1, x1, x2, x2, x2, x2],
+                        [y1, y1, y2, y2, y1, y1, y2, y2],
+                        [z1, z2, z1, z2, z1, z2, z1, z2]])
+    edge = np.array([[0, 1],[0, 2],[2, 3],[1, 3],[0, 4],[1, 5],
+                        [2, 6],[3, 7], [5, 7],[4, 5],[6, 7],[4, 6] ])
+    return vertice3D, edge
+
+
+def boundingboxGT( h, l, d, x, y, z, z_offset = 0, alpha = math.pi/2):
+    # generate 3D bounding box
+    if alpha < 0:
+        alpha = alpha + math.pi
+    x1, x2 = x - l/2 - y*math.sin(alpha - math.pi/2),x + l/2 - y*math.sin(alpha - math.pi/2)
+    y1, y2 = y - h,y
+    z1, z2 = z ,z+d + z_offset
+    #print(x1,x2,y1,y2,z1,z2)
     vertice3D = np.array([[x1, x1, x1, x1, x2, x2, x2, x2],
                         [y1, y1, y2, y2, y1, y1, y2, y2],
                         [z1, z2, z1, z2, z1, z2, z1, z2]])
@@ -216,7 +234,15 @@ def get_boundingbox(pcd_3D_list, image, P, res_dir, img_name, z_offset = 0):
         for i in range(edge.shape[0]):
             ax1.plot([vertice2D[0, edge[i, 0]], vertice2D[0, edge[i, 1]]],
                 [vertice2D[1, edge[i, 0]], vertice2D[1, edge[i, 1]]], 'r')
+    # plot GT bounding box
+    vertice3D, edge = boundingboxGT(1.51, 1.67, 4.30, -3.43, 1.79, 26.49, alpha = 1.72)
+    #print(P)
+    vertice2D = ThreeD2TwoD(P, vertice3D)
+    for i in range(edge.shape[0]):
+        ax1.plot([vertice2D[0, edge[i, 0]], vertice2D[0, edge[i, 1]]],
+                    [vertice2D[1, edge[i, 0]], vertice2D[1, edge[i, 1]]], 'b')
     
+    #ax1.plot([482.38, 545.56, 545.56, 482.38, 482.38], [227.01, 227.01, 183.29, 183.29, 227.01], 'b')
     # plt.show()
     ax1.axis('off')
     plt.tight_layout()
